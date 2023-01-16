@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addNewPost } from "./postSlice";
 import { selectAllUsers } from "../users/userSlice";
 import { nanoid } from "@reduxjs/toolkit";
-import PostUser from "../users/Postuser";
+import PostUser from "../users/PostUser";
 
 const AddPostForm = () => {
   const [user, setUser] = useState("");
