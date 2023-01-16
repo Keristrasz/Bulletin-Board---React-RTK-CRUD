@@ -104,5 +104,11 @@ const postSlice = createSlice({
 export const selectAllPosts = (state) => state.post.posts;
 export const selectPostsStatus = (state) => state.post.status;
 export const selectPostsError = (state) => state.post.error;
-export default postSlice.reducer;
+
+// we find the proper post, by putting postId as argument
+export const selectPostById = (state, postId) => 
+  state.post.posts.find(post => post.id === postId);
+
 export const { newPost, newPostReaction } = postSlice.actions;
+
+export default postSlice.reducer;

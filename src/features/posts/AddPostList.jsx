@@ -9,6 +9,7 @@ import {
 import TimeAgo from "./TimeAgo";
 import PostReactionButtons from "./PostReactionButtons";
 import { selectAllUsers } from "../users/userSlice";
+import { Link } from "react-router-dom"
 
 const PostList = () => {
   const dispatch = useDispatch();
@@ -46,6 +47,7 @@ const PostList = () => {
         </h4>{" "}
         {/*to see preview of 100 max char */}
         <p className="parInPost">
+          <Link to={`post/${post.id}`}> View Post </Link> {/*Link to post.id to single page app*/}
           <i>
             <TimeAgo timestamp={post.date} />
           </i>

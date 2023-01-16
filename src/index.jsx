@@ -5,6 +5,7 @@ import App from "./App";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import { fetchUsers } from "./features/users/userSlice";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container);
@@ -13,8 +14,12 @@ store.dispatch(fetchUsers()); // to fetchUsers immidiately, fixes problem with l
 //also we dont need to use useeffect somewhere in file
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
-      <App />
+    <Provider store={store}>  {/* We want to provide store to all files */}
+      <Router>  {/* BrowserRouter renamed as Router */}
+        <Routes>
+          <Route path="/*" element={<App />} />  {/* anything beyond URL - allows us to nest routes */}
+        </Routes>
+      </Router>
     </Provider>
   </React.StrictMode>
 );

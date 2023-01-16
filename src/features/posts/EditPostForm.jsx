@@ -1,18 +1,31 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewPost } from "./postSlice";
+import { addNewPost, selectPostById } from "./postSlice";
 import { selectAllUsers } from "../users/userSlice";
-import { nanoid } from "@reduxjs/toolkit";
 import PostUser from "../users/PostUser";
+import {useParams, useNavigate} from "react-router-dom"
 
-const AddPostForm = () => {
-  const [user, setUser] = useState("");
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
-  const [addRequestStatus, setAddRequestStatus] = useState("idle");
+// import PostReactionButtons from "./PostReactionButtons";
+// import TimeAgo from "./TimeAgo";
 
+const EditPostForm = () => {
+  const { postId } = useParams() //pulls postId from url params
+  const navigate = useNavigate()
+  
   const dispatch = useDispatch();
   const users = useSelector(selectAllUsers);
+  const currentPost = useSelector(state => selectPostById(state, Number(postId))) // have to have callback to post both state, and postId
+  const currentUser = users.find((el) => el.id === currentPost.userId);
+
+  //<TimeAgo timestamp={currentPost.date} />
+//  <PostReactionButtons post={currentPost} />
+
+  const {title: titleForUseState, body: bodyForUseState} = currentPost;
+
+  const [user, setUser] = useState({currentUser});
+  const [title, setTitle] = useState({titleForUseState});
+  const [body, setBody] = useState({bodyForUseState});
+  const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   const canSave = [title, title, user].every(Boolean) && addRequestStatus === "idle";
 
@@ -21,8 +34,8 @@ const AddPostForm = () => {
       try {
         setAddRequestStatus("pending");
         let userIdInSelector = users.find((el) => el.name == user).userId;
-        let generatedId = userIdInSelector ? userIdInSelector : nanoid(); //to generate new ID only if user doesnt exist, otherwise use IDInSelector
-        dispatch(addNewPost({ title, body, userId: generatedId })).unwrap(); //unwrap allows us to use try, catch block (it returns error if something goes wrong)
+        let generatedId = userIdInSelector ? userIdInSelector : nanoid(); 
+        dispatch(addNewPost({ title, body, userId: generatedId })).unwrap(); 
         setTitle("");
         setBody("");
         console.log(userIdInSelector, generatedId);
@@ -75,11 +88,14 @@ const AddPostForm = () => {
           />
         </div>
         <button id="submit" type="button" disabled={!canSave} onClick={onClickFunc}>
-          Submit
+          Update User
         </button>
       </form>
     </>
   );
 };
 
-export default AddPostForm;
+export default EditPostForm;
+
+  
+  
