@@ -1,31 +1,33 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addNewPost, selectPostById } from "./postSlice";
+import { updatePost, selectPostById } from "./postSlice";
 import { selectAllUsers } from "../users/userSlice";
 import PostUser from "../users/PostUser";
-import {useParams, useNavigate} from "react-router-dom"
-
-// import PostReactionButtons from "./PostReactionButtons";
-// import TimeAgo from "./TimeAgo";
+import { useParams, useNavigate } from "react-router-dom";
 
 const EditPostForm = () => {
-  const { postId } = useParams() //pulls postId from url params
-  const navigate = useNavigate()
-  
-  const dispatch = useDispatch();
+  const { postId } = useParams(); //pulls postId from url params
+  const navigate = useNavigate();
+
   const users = useSelector(selectAllUsers);
-  const currentPost = useSelector(state => selectPostById(state, Number(postId))) // have to have callback to post both state, and postId
+  const currentPost = useSelector((state) => selectPostById(state, Number(postId))); // have to have callback to post both state, and postId
   const currentUser = users.find((el) => el.id === currentPost.userId);
+  const userId = currentUser.id;
 
-  //<TimeAgo timestamp={currentPost.date} />
-//  <PostReactionButtons post={currentPost} />
+  const dispatch = useDispatch();
 
-  const {title: titleForUseState, body: bodyForUseState} = currentPost;
-
-  const [user, setUser] = useState({currentUser});
-  const [title, setTitle] = useState({titleForUseState});
-  const [body, setBody] = useState({bodyForUseState});
+  const [user, setUser] = useState(currentUser?.name);
+  const [title, setTitle] = useState(currentPost?.title); //?. chaining operator returns always undefined if something goes wrong
+  const [body, setBody] = useState(currentPost?.body);
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
+
+  if (!currentPost) {
+    return (
+      <section>
+        <h2>Post was not found!</h2>
+      </section>
+    );
+  }
 
   const canSave = [title, title, user].every(Boolean) && addRequestStatus === "idle";
 
@@ -33,12 +35,21 @@ const EditPostForm = () => {
     if (canSave) {
       try {
         setAddRequestStatus("pending");
-        let userIdInSelector = users.find((el) => el.name == user).userId;
-        let generatedId = userIdInSelector ? userIdInSelector : nanoid(); 
-        dispatch(addNewPost({ title, body, userId: generatedId })).unwrap(); 
+        dispatch(
+          updatePost({
+            id: postId,
+            title,
+            body,
+            userId,
+            reaction: currentPost.reaction,
+          })
+        ).unwrap(); //unwrap to allow try & catch block
+
+        setUser("");
         setTitle("");
         setBody("");
-        console.log(userIdInSelector, generatedId);
+
+        navigate(`/post/${postId}`);
       } catch (err) {
         console.error("Failed to save the post", err);
       } finally {
@@ -53,7 +64,7 @@ const EditPostForm = () => {
       <h2>Form</h2>
       <form>
         {/*action="" method="POST"*/}
-        <div className="formParts">
+        <div className="divForm">
           <label htmlFor="title">Title</label>
           <input
             type="text"
@@ -64,21 +75,22 @@ const EditPostForm = () => {
             value={title}
           />
         </div>
-        <div className="formParts">
+        <div className="divForm">
           <label htmlFor="user">Author</label>
           <select
             onChange={(e) => {
               setUser(e.target.value);
             }}
+            defaultValue={user} //last author
           >
             <option value=""></option>
             <PostUser />
           </select>
         </div>
-        <div className="formParts">
+        <div className="divForm">
           <label htmlFor="body">Body</label>
           <textarea
-            rows="4"
+            rows="8"
             type="text"
             name="body"
             onChange={(e) => {
@@ -96,6 +108,3 @@ const EditPostForm = () => {
 };
 
 export default EditPostForm;
-
-  
-  

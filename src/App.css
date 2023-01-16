@@ -10,13 +10,42 @@ html {
   color: whitesmoke;
 }
 
-body {
-  margin: 0.5em;
+/*  HEADER */
+
+header {
+  padding: 0.5em;
+  position: sticky;
+  top: 0;
 }
+
+a {
+  color: rgb(185, 62, 62);
+  font-size: 1.75em;
+  padding: 1em;
+}
+
+.parInPost > a {
+  font-size: 1em;
+  padding: 0em 1em 0em 0em;
+}
+
+header,
+ul {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+}
+
+header {
+  background-color: #555555;
+}
+
+/* MAIN  */
 
 main {
   max-width: 600px;
   margin: auto;
+  padding: 0.25em;
   font-size: 1.5em;
 }
 
@@ -55,6 +84,13 @@ p {
   margin: 0.5em 0;
 }
 
+input,
+textarea,
+select {
+  margin-left: 1.5em;
+  width: 75%;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -62,18 +98,17 @@ form {
   align-items: center;
 }
 
-.formParts {
+.divForm {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
-  margin: 0.2em;
 }
 
-input,
-textarea,
-select {
-  margin-left: 1.5em;
-  width: 75%;
+.divForm > input,
+select,
+textarea {
+  display: flex;
+  flex-direction: column;
+  margin: 0.35em 0em;
+  width: 100%;
 }
 
 #submit {

@@ -31,6 +31,17 @@ export const addNewPost = createAsyncThunk("posts/addNewPost", async (initialPos
   }
 });
 
+export const updatePost = createAsyncThunk("posts/updatePost", async (initialPost) => {
+  const { id } = initialPost; // id = post.id
+  try {
+    const response = await axios.put(`${POST_URL}/${id}`, initialPost); //PATCH/PUT request
+    return response.data;
+  } catch (err) {
+    console.trace(err);
+    return err.message;
+  }
+});
+
 const initialState = {
   posts: [], //hydrate state from API
   status: "idle", // "idle" | "loading" | "succeeded" | "failed"
@@ -52,7 +63,7 @@ const postSlice = createSlice({
   }, //Extra reducer can response on action we didnt define - like fetchPosts
   extraReducers(builder) {
     //with builder (object) we can add additional case reducers which can response on actions not defined in slice
-    builder //like switch statement?
+    builder //like redux switch statement?
       .addCase(fetchPosts.pending, (state, action) => {
         //if fetchPosts.pending is true?
         //listens for the promise status action types
@@ -95,8 +106,17 @@ const postSlice = createSlice({
           guitar: 0,
           mug: 0,
         };
-        console.log(action.payload);
         state.posts.unshift(action.payload);
+      })
+      .addCase(updatePost.fulfilled, (state, action) => {
+        if (!action.payload?.id) {
+          //optional chaining, returns undefined instead of error
+          console.log("Update error!", action.payload);
+        }
+        action.payload.date = new Date().toISOString(); //update date
+        const filteredPosts = state.posts.filter((post) => post.id !== action.payload.id); //removes selected post from state
+        console.log(action.payload);
+        state.posts = [action.payload, ...filteredPosts]; //returns  1 selected posts, and all (99+) rest posts
       });
   },
 });
@@ -106,8 +126,8 @@ export const selectPostsStatus = (state) => state.post.status;
 export const selectPostsError = (state) => state.post.error;
 
 // we find the proper post, by putting postId as argument
-export const selectPostById = (state, postId) => 
-  state.post.posts.find(post => post.id === postId);
+export const selectPostById = (state, postId) =>
+  state.post.posts.find((post) => post.id === postId);
 
 export const { newPost, newPostReaction } = postSlice.actions;
 

@@ -40,7 +40,7 @@ const AddPostForm = () => {
       <h2>Form</h2>
       <form>
         {/*action="" method="POST"*/}
-        <div className="formParts">
+        <div className="divForm">
           <label htmlFor="title">Title</label>
           <input
             type="text"
@@ -51,7 +51,7 @@ const AddPostForm = () => {
             value={title}
           />
         </div>
-        <div className="formParts">
+        <div className="divForm">
           <label htmlFor="user">Author</label>
           <select
             onChange={(e) => {
@@ -62,10 +62,10 @@ const AddPostForm = () => {
             <PostUser />
           </select>
         </div>
-        <div className="formParts">
+        <div className="divForm">
           <label htmlFor="body">Body</label>
           <textarea
-            rows="4"
+            rows="8"
             type="text"
             name="body"
             onChange={(e) => {
