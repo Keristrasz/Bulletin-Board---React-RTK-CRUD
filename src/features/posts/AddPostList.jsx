@@ -30,12 +30,12 @@ const PostList = () => {
   // const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
 
   const renderAllPosts = posts.map((post) => {
-    let currentUser = users.find((user) => user.id === post.userId).name; //to match id and userid with users x posts
+    let currentUser = users.find((user) => user.id === post.userId); //to match id and userid with users x posts
     return (
       //make article for each post saved in store
       <article key={post.id}>
         <p className="parInPost">
-          By: <i>{currentUser}</i>
+          By: <i>{currentUser?.name}</i>
         </p>
         <h3>{post.title}</h3>
         <h4>
