@@ -2,16 +2,16 @@ import { createSlice, nanoid, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { sub } from "date-fns";
 
-//fake API which simualtes get, post, update, delete requests
+//fake API which simualtes get, post, update, delete requests.
 
 const POST_URL = "https://jsonplaceholder.typicode.com/posts";
 
-//createAsyncThunk we use when working with REDUX
-//2 args - string prefix for generated action types,, promise return data or error
+//createAsyncThunk is REDUX feature, works with builder
+//2 args - string prefix for generated action types, second is promise return data or error
 
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   try {
-    const response = await axios.get(POST_URL); //get request
+    const response = await axios.get(POST_URL); //GET request
     return response.data;
   } catch (err) {
     console.trace(err);
@@ -19,7 +19,7 @@ export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   }
 });
 
-//now we want to post data into API, not fetch them. It recieves initialPost we are gonna send into
+//now we want to post data into API. It recieves initialPost we are gonna send into API (just simulation)
 
 export const addNewPost = createAsyncThunk("posts/addNewPost", async (initialPost) => {
   try {
@@ -46,7 +46,9 @@ export const deletePost = createAsyncThunk("posts/deletePost", async (initialPos
   const { id } = initialPost; // id = post.id
   try {
     const response = await axios.delete(`${POST_URL}/${id}`, initialPost); //DELETE request
-    if (response?.status === 200) {return initialPost};  //normaly we get id back, but here we dont, thats why we are returning initialPost, to get postId
+    if (response?.status === 200) {
+      return initialPost;
+    } //normaly we get id back, but here we dont, thats why we are returning initialPost, to get postId
     return `${response?.status}: ${response?.statusText}`; //or we can at least get status instead of empty object
   } catch (err) {
     console.trace(err);
@@ -76,13 +78,12 @@ const postSlice = createSlice({
   extraReducers(builder) {
     //with builder (object) we can add additional case reducers which can response on actions not defined in slice
     builder //like redux switch statement?
-      .addCase(fetchPosts.pending, (state, action) => {
-        //if fetchPosts.pending is true?
-        //listens for the promise status action types
+      .addCase(fetchPosts.pending, (state) => {
+        //if fetchPosts is pending
         state.status = "loading"; //if fetchPosts is pending, state.status is loading
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
-        state.status = "succeeded"; // dont forget we can mutate state like this only in slice cause of IMMERJS
+        state.status = "succeeded"; //IMMERJS
         let timer = 3;
         const loadedPosts = action.payload.map((post) => {
           //we change payload and then save it
@@ -105,10 +106,10 @@ const postSlice = createSlice({
       .addCase(fetchPosts.rejected, (state, action) => {
         console.log("fetch post failed");
         state.status = "failed";
-        state.error = action.error.message; //action has payload, and error keys
+        state.error = action.error.message; //to get error message
       })
       .addCase(addNewPost.fulfilled, (state, action) => {
-        //we are gonna define payload we gonna send to API
+        //we are gonna define payload we gonna send to API, with new data
         action.payload.date = new Date().toISOString();
         action.payload.id = nanoid();
         action.payload.reaction = {
@@ -118,12 +119,12 @@ const postSlice = createSlice({
           guitar: 0,
           mug: 0,
         };
-        state.posts.unshift(action.payload);
+        state.posts.unshift(action.payload); //and put state to beginning of our state.posts array
       })
       .addCase(updatePost.fulfilled, (state, action) => {
         if (!action.payload?.id) {
           //optional chaining ?., returns undefined instead of error
-          //with our fake API, errors can happen, action.payload can  be error message with catchblock/unwrap we used. We can have succesful fullfiled updatedPost, but it doesnt have to be status 200. Axios still returns something, so it is considered fullfilled.
+          //with our fake API, errors can happen, action.payload can be error message with catchblock/unwrap we used so updatePost can be fullfiled.
           console.log("Update error! ", action.payload);
           return;
         }
@@ -139,7 +140,7 @@ const postSlice = createSlice({
         }
         const filteredPosts = state.posts.filter((post) => post.id != action.payload.id); //removes selected post from filtered post, has to be not strict =
         state.posts = filteredPosts; //returns rest posts
-      })
+      });
   },
 });
 

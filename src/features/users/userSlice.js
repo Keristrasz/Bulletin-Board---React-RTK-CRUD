@@ -26,7 +26,7 @@ const userSlice = createSlice({
   extraReducers(builder) {
     builder
       .addCase(fetchUsers.fulfilled, (state, action) => {
-        state.status = "succeeded"; // dont forget we can mutate state like this only in slice cause of IMMERJS
+        state.status = "succeeded"; // IMMERJS
         const loadedUsers = action.payload.map((el) => {
           //we change payload, and then save it, and concat it
           el.userId = el.id;

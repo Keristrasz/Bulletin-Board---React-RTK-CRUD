@@ -3,7 +3,6 @@ import { selectPostById } from "./postSlice";
 import TimeAgo from "./TimeAgo";
 import PostReactionButtons from "./PostReactionButtons";
 import { selectAllUsers } from "../users/userSlice";
-
 import { useParams, Link } from "react-router-dom";
 
 const SinglePostPage = () => {
@@ -20,14 +19,14 @@ const SinglePostPage = () => {
         <h2>Post not found!</h2>
         <p>
           State refreshes to default fake API values, no new posts can be showed after
-          browser refresh{" "}
+          browser refresh
         </p>
       </section>
     );
   }
 
-  const user = users.find((user) => user.id == post?.userId); //post is too slow, post.userId throws undefined sometimes
-
+  const user = users.find((user) => user.id == post?.userId); //post is too slow, need chaining operator
+  //hybrid between one post and post form
   return (
     <section>
       <article>

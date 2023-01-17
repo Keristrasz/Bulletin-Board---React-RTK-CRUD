@@ -20,12 +20,10 @@ const reactionFaEmojis = {
 
 const PostReactionButtons = ({ post }) => {
   // We can change files from store, or directly when passing current post from mapping all posts from high order component
-  // const posts = useSelector(selectAllPosts);
-  // const findCurrentPost = posts.find((post) => postId == post.id);
 
   const dispatch = useDispatch();
 
-  //refactored to map (declerative way), before typed all 5 buttons (imp way), and used props post
+  //refactored to map (declerative way), probably worse for performance
 
   const renderAllButtons = Object.entries(reactionFaEmojis).map(
     ([reactionName, emojiIcon]) => {

@@ -7,13 +7,13 @@ import { useParams, useNavigate } from "react-router-dom";
 
 const EditPostForm = () => {
   const { postId } = useParams(); //pulls postId from url params
-  const navigate = useNavigate();
+  const navigate = useNavigate(); //to navigate to url
 
   const users = useSelector(selectAllUsers);
   const currentPost = useSelector((state) => selectPostById(state, postId)); // have to have callback to post both state, and postId
-  
+
   const currentUser = users.find((el) => el.id === currentPost?.userId);
-  const userId = currentUser?.id;  //currentUser is too slow?
+  const userId = currentUser?.id; //currentUser is too slow, thats why chaining operator
 
   if (!currentPost || !currentUser) {
     return (
@@ -30,7 +30,6 @@ const EditPostForm = () => {
   const [body, setBody] = useState(currentPost?.body);
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
-
   const canSave = [title, title, user].every(Boolean) && addRequestStatus === "idle";
 
   const onClickUpdate = () => {
@@ -46,11 +45,9 @@ const EditPostForm = () => {
             reaction: currentPost.reaction,
           })
         ).unwrap(); //unwrap to allow try & catch block
-
         setUser("");
         setTitle("");
         setBody("");
-
         navigate(`/post/${postId}`);
       } catch (err) {
         console.error("Failed to save the post", err);
@@ -70,11 +67,9 @@ const EditPostForm = () => {
             id: postId,
           })
         ).unwrap(); //unwrap to allow try & catch block
-
         setUser("");
         setTitle("");
         setBody("");
-
         navigate(`/`);
       } catch (err) {
         console.error("Failed to delete the post", err);

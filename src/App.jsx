@@ -21,8 +21,7 @@ function App() {
           <Route index element={<AddPostForm />} />
           <Route path=":postId" element={<SinglePostPage />} />{" "}
           {/* goes to selected post, after url/post/:postId */}
-          <Route path="edit/:postId" element={<EditPostForm />} />{" "}
-          {/* FIX! */}
+          <Route path="edit/:postId" element={<EditPostForm />} /> {/* FIX! */}
         </Route>
       </Route>
     </Routes>

@@ -1,18 +1,18 @@
-import { Outlet } from "react-router-dom"
-import Header from "./Header"
+import { Outlet } from "react-router-dom";
+import Header from "./Header";
 
-//Creating outlet layout, we can include footer, header components here. 
-//Outlet represents all of childrens
+//Creating outlet layout, we can include footer, header components here.
+//Outlet represents all of childrens, is parent to all
 
 const Layout = () => {
   return (
     <>
       <Header />
-      <main className="App" >
+      <main className="App">
         <Outlet />
-      </main >
+      </main>
     </>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

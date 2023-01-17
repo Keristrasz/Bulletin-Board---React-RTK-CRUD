@@ -1,9 +1,7 @@
-import { useSelector, useDispatch } from "react-redux";
-
-import { selectAllUsers, selectUsersError, selectUsersStatus } from "./userSlice";
+import { useSelector } from "react-redux";
+import { selectAllUsers } from "./userSlice";
 
 const PostUser = () => {
-  const dispatch = useDispatch();
   const users = useSelector(selectAllUsers); //state.user.users = state from slices name "user"
 
   const usersOptions = users.map((elem) => {

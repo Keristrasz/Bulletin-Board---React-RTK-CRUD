@@ -13,8 +13,8 @@ const AddPostForm = () => {
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
   const dispatch = useDispatch();
-  const users = useSelector(selectAllUsers);
   const navigate = useNavigate();
+  const users = useSelector(selectAllUsers);
 
   const canSave = [title, title, user].every(Boolean) && addRequestStatus === "idle";
 

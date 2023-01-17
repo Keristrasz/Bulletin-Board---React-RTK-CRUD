@@ -1,5 +1,7 @@
 import { parseISO, formatDistanceToNow } from "date-fns";
 
+//passed timestamp as propand then converted to something like 5 mins ago
+
 const TimeAgo = ({ timestamp }) => {
   let stringAgo = "";
   if (timestamp) {
