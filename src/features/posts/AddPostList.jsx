@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector} from "react-redux";
 import {
   selectAllPosts,
   selectPostsError,
@@ -12,23 +11,20 @@ import { selectAllUsers } from "../users/userSlice";
 import { Link } from "react-router-dom"
 
 const PostList = () => {
-  const dispatch = useDispatch();
+  
   const users = useSelector(selectAllUsers);
   const posts = useSelector(selectAllPosts); //state.post.posts = state from slices name "post"
   const postsStatus = useSelector(selectPostsStatus);
   const postsError = useSelector(selectPostsError);
 
-  let statuss = true; //useEffect runs twice, cause of strictmode (in run dev), this prevents it
+  // useeffect to trigger fetching data and dispatching it to store (after component mounted)
 
-  //useeffect to trigger fetching data and dispatching it to store (after component mounted)
-
-  useEffect(() => {
-    if (postsStatus === "idle" && statuss) {
-      //initialState is defaultly set to idle
-      statuss = false;
-      dispatch(fetchPosts()); //this activates function fetchPosts in slice, and activates builder for different actions
-    }
-  }, [postsStatus, dispatch]); //why dispatch?
+  // useEffect(() => {
+  //   if (postsStatus === "idle" && statuss) {
+  //     //initialState is defaultly set to idle
+  //     dispatch(fetchPosts()); //this activates function fetchPosts in slice, and activates builder for different actions
+  //   }
+  // }, [postsStatus, dispatch]); 
 
   // if we want to order posts (we use unshift instead of push)
   // const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))

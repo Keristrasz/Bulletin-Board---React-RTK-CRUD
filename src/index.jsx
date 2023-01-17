@@ -5,11 +5,13 @@ import App from "./App";
 import { store } from "./app/store";
 import { Provider } from "react-redux";
 import { fetchUsers } from "./features/users/userSlice";
+import { fetchPosts } from "./features/posts/postSlice"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container);
 
+store.dispatch(fetchPosts());
 store.dispatch(fetchUsers()); // to fetchUsers immidiately, fixes problem with loading users before fetching users
 //also we dont need to use useeffect somewhere in file
 root.render(

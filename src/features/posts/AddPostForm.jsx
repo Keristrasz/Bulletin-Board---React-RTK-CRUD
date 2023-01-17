@@ -4,6 +4,7 @@ import { addNewPost } from "./postSlice";
 import { selectAllUsers } from "../users/userSlice";
 import { nanoid } from "@reduxjs/toolkit";
 import PostUser from "../users/PostUser";
+import { useNavigate } from "react-router-dom";
 
 const AddPostForm = () => {
   const [user, setUser] = useState("");
@@ -13,6 +14,7 @@ const AddPostForm = () => {
 
   const dispatch = useDispatch();
   const users = useSelector(selectAllUsers);
+  const navigate = useNavigate();
 
   const canSave = [title, title, user].every(Boolean) && addRequestStatus === "idle";
 
@@ -25,7 +27,7 @@ const AddPostForm = () => {
         dispatch(addNewPost({ title, body, userId: generatedId })).unwrap(); //unwrap allows us to use try, catch block (it returns error if something goes wrong)
         setTitle("");
         setBody("");
-        console.log(userIdInSelector, generatedId);
+        navigate(`/`);
       } catch (err) {
         console.error("Failed to save the post", err);
       } finally {

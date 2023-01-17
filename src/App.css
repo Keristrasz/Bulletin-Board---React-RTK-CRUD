@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 
+:root {
+  --beige: #e8a1af;
+}
+
 html {
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   background: #333;
@@ -18,10 +22,14 @@ header {
   top: 0;
 }
 
+h1 {
+  font-size: 2.5em;
+}
+
 a {
-  color: rgb(185, 62, 62);
+  color: var(--beige);
   font-size: 1.75em;
-  padding: 1em;
+  padding: 0em 2.5em 0em 0.5em;
 }
 
 .parInPost > a {
@@ -33,6 +41,7 @@ header,
 ul {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   list-style: none;
 }
 
@@ -57,13 +66,19 @@ select {
   font-size: 0.75em;
 }
 
+
+
 h2 {
   margin: 0.35em 0em;
 }
 
 h3,
 h4 {
-  margin: 0.35em 0em;
+  margin: 0.25em 0em;
+}
+
+h4 {
+  font-weight: normal;
 }
 
 .parInPost {
@@ -116,6 +131,20 @@ textarea {
   width: 100%;
   height: 2em;
 }
+#deletePost {
+  margin: 0.25em 0em 0.25em 0em;
+  width: 100%;
+  height: 2em;
+  background-color: var(--beige);
+}
+
+#deletePost:hover {
+  background-color: red;
+}
+
+a:hover {
+  color: red;
+}
 
 .reactionButton {
   margin: 0 0.5em 0.25em 0;
@@ -131,4 +160,15 @@ textarea {
 
 button:hover {
   cursor: pointer;
+}
+
+/* MEDIA QUERY */
+
+@media only screen and (max-width: 750px) {
+  h1 {
+  font-size: 1.6em;
+}
+  a {
+  padding: 0em 0.5em 0em 0.5em;
+}
 }

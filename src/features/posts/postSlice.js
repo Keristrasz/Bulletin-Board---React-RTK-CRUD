@@ -37,6 +37,18 @@ export const updatePost = createAsyncThunk("posts/updatePost", async (initialPos
     const response = await axios.put(`${POST_URL}/${id}`, initialPost); //PATCH/PUT request
     return response.data;
   } catch (err) {
+    //return err.message if we woudnt be working with fake API
+    return initialPost; // only for testing Redux!, we are working with fake API
+  }
+});
+
+export const deletePost = createAsyncThunk("posts/deletePost", async (initialPost) => {
+  const { id } = initialPost; // id = post.id
+  try {
+    const response = await axios.delete(`${POST_URL}/${id}`, initialPost); //DELETE request
+    if (response?.status === 200) return initialPost;
+    return `${response?.status}: ${response?.statusText}`; //add info
+  } catch (err) {
     console.trace(err);
     return err.message;
   }
@@ -54,7 +66,7 @@ const postSlice = createSlice({
     newPostReaction: (state, action) => {
       //reducer for reaction numbers
 
-      //DECLERATIVE WAY - we find needed post from state, and add reaction++
+      // we find needed post from state, and add reaction++
       const postExists = state.posts.find((post) => post.id === action.payload.postId);
       if (postExists) {
         postExists.reaction[action.payload.reaction]++;
@@ -111,13 +123,21 @@ const postSlice = createSlice({
       .addCase(updatePost.fulfilled, (state, action) => {
         if (!action.payload?.id) {
           //optional chaining, returns undefined instead of error
-          console.log("Update error!", action.payload);
+          console.log("Update error! ", action.payload);
+          return;
         }
         action.payload.date = new Date().toISOString(); //update date
-        const filteredPosts = state.posts.filter((post) => post.id !== action.payload.id); //removes selected post from state
-        console.log(action.payload);
+        const filteredPosts = state.posts.filter((post) => post.id !== action.payload.id); //removes selected post from filteredPosts const
         state.posts = [action.payload, ...filteredPosts]; //returns  1 selected posts, and all (99+) rest posts
-      });
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        if (!action.payload?.id) {
+          console.log("Delete error! ", action.payload);
+          return;
+        }
+        const filteredPosts = state.posts.filter((post) => post.id != action.payload.id); //removes selected post from filtered post, has to be not strict =
+        state.posts = filteredPosts; //returns rest posts
+      })
   },
 });
 
@@ -127,7 +147,7 @@ export const selectPostsError = (state) => state.post.error;
 
 // we find the proper post, by putting postId as argument
 export const selectPostById = (state, postId) =>
-  state.post.posts.find((post) => post.id === postId);
+  state.post.posts.find((post) => post.id == postId);
 
 export const { newPost, newPostReaction } = postSlice.actions;
 

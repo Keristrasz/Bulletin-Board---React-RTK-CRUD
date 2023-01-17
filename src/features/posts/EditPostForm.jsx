@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updatePost, selectPostById } from "./postSlice";
+import { updatePost, selectPostById, deletePost } from "./postSlice";
 import { selectAllUsers } from "../users/userSlice";
 import PostUser from "../users/PostUser";
 import { useParams, useNavigate } from "react-router-dom";
@@ -10,9 +10,18 @@ const EditPostForm = () => {
   const navigate = useNavigate();
 
   const users = useSelector(selectAllUsers);
-  const currentPost = useSelector((state) => selectPostById(state, Number(postId))); // have to have callback to post both state, and postId
-  const currentUser = users.find((el) => el.id === currentPost.userId);
-  const userId = currentUser.id;
+  const currentPost = useSelector((state) => selectPostById(state, postId)); // have to have callback to post both state, and postId
+  
+  const currentUser = users.find((el) => el.id === currentPost?.userId);
+  const userId = currentUser?.id;  //currentUser is too slow?
+
+  if (!currentPost || !currentUser) {
+    return (
+      <section>
+        <h2>Post was not found!</h2>
+      </section>
+    );
+  }
 
   const dispatch = useDispatch();
 
@@ -21,17 +30,10 @@ const EditPostForm = () => {
   const [body, setBody] = useState(currentPost?.body);
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
-  if (!currentPost) {
-    return (
-      <section>
-        <h2>Post was not found!</h2>
-      </section>
-    );
-  }
 
   const canSave = [title, title, user].every(Boolean) && addRequestStatus === "idle";
 
-  const onClickFunc = () => {
+  const onClickUpdate = () => {
     if (canSave) {
       try {
         setAddRequestStatus("pending");
@@ -52,6 +54,30 @@ const EditPostForm = () => {
         navigate(`/post/${postId}`);
       } catch (err) {
         console.error("Failed to save the post", err);
+      } finally {
+        //always sets status back to idle
+        setAddRequestStatus("idle");
+      }
+    }
+  };
+
+  const onClickDelete = () => {
+    if (canSave) {
+      try {
+        setAddRequestStatus("pending");
+        dispatch(
+          deletePost({
+            id: postId,
+          })
+        ).unwrap(); //unwrap to allow try & catch block
+
+        setUser("");
+        setTitle("");
+        setBody("");
+
+        navigate(`/`);
+      } catch (err) {
+        console.error("Failed to delete the post", err);
       } finally {
         //always sets status back to idle
         setAddRequestStatus("idle");
@@ -99,8 +125,11 @@ const EditPostForm = () => {
             value={body}
           />
         </div>
-        <button id="submit" type="button" disabled={!canSave} onClick={onClickFunc}>
-          Update User
+        <button id="submit" type="button" disabled={!canSave} onClick={onClickUpdate}>
+          Update Post
+        </button>
+        <button id="deletePost" type="button" onClick={onClickDelete}>
+          Delete Post!
         </button>
       </form>
     </>
