@@ -46,8 +46,8 @@ export const deletePost = createAsyncThunk("posts/deletePost", async (initialPos
   const { id } = initialPost; // id = post.id
   try {
     const response = await axios.delete(`${POST_URL}/${id}`, initialPost); //DELETE request
-    if (response?.status === 200) return initialPost;
-    return `${response?.status}: ${response?.statusText}`; //add info
+    if (response?.status === 200) {return initialPost};  //normaly we get id back, but here we dont, thats why we are returning initialPost, to get postId
+    return `${response?.status}: ${response?.statusText}`; //or we can at least get status instead of empty object
   } catch (err) {
     console.trace(err);
     return err.message;
@@ -122,7 +122,8 @@ const postSlice = createSlice({
       })
       .addCase(updatePost.fulfilled, (state, action) => {
         if (!action.payload?.id) {
-          //optional chaining, returns undefined instead of error
+          //optional chaining ?., returns undefined instead of error
+          //with our fake API, errors can happen, action.payload can  be error message with catchblock/unwrap we used. We can have succesful fullfiled updatedPost, but it doesnt have to be status 200. Axios still returns something, so it is considered fullfilled.
           console.log("Update error! ", action.payload);
           return;
         }
@@ -132,6 +133,7 @@ const postSlice = createSlice({
       })
       .addCase(deletePost.fulfilled, (state, action) => {
         if (!action.payload?.id) {
+          //again if id key doesnt exist for some reason, this prints error
           console.log("Delete error! ", action.payload);
           return;
         }
