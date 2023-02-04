@@ -10,18 +10,11 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        {" "}
-        {/* Layout is parent to everything, we set styles here */}
-        <Route index element={<AddPostList />} />{" "}
-        {/* index shows up by default, only one index per route */}
-        {/* <Route index element={<AddPostList />} /> */}
+        <Route index element={<AddPostList />} />
         <Route path="post">
-          {" "}
-          {/* route URL/post */}
           <Route index element={<AddPostForm />} />
-          <Route path=":postId" element={<SinglePostPage />} />{" "}
-          {/* goes to selected post, after url/post/:postId */}
-          <Route path="edit/:postId" element={<EditPostForm />} /> {/* FIX! */}
+          <Route path=":postId" element={<SinglePostPage />} />
+          <Route path="edit/:postId" element={<EditPostForm />} />
         </Route>
       </Route>
     </Routes>

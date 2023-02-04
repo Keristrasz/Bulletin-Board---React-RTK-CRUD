@@ -12,17 +12,13 @@ const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container);
 
 store.dispatch(fetchPosts());
-store.dispatch(fetchUsers()); // to fetchUsers immidiately, fixes problem with loading users before fetching users
-//also we dont need to use useeffect somewhere in file
+store.dispatch(fetchUsers()); 
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      {/* We want to provide store to all files */}
       <Router>
-        {/* BrowserRouter renamed as Router */}
         <Routes>
           <Route path="/*" element={<App />} />{" "}
-          {/* anything beyond URL - allows us to nest routes */}
         </Routes>
       </Router>
     </Provider>

@@ -6,13 +6,10 @@ import { sub } from "date-fns";
 
 const POST_URL = "https://jsonplaceholder.typicode.com/posts";
 
-//createAsyncThunk is REDUX feature, works with builder
-//2 args - string prefix for generated action types, second is promise return data or error
-
 export const fetchPosts = createAsyncThunk("posts/fetchPosts", async () => {
   try {
     const response = await axios.get(POST_URL); //GET request
-    return response.data;
+    return response.data.filter((el, index) => index < 40); //first 40posts
   } catch (err) {
     console.trace(err);
     return err.message;
@@ -130,7 +127,7 @@ const postSlice = createSlice({
         }
         action.payload.date = new Date().toISOString(); //update date
         const filteredPosts = state.posts.filter((post) => post.id !== action.payload.id); //removes selected post from filteredPosts const
-        state.posts = [action.payload, ...filteredPosts]; //returns  1 selected posts, and all (99+) rest posts
+        state.posts = [action.payload, ...filteredPosts]; //returns  1 selected posts, and all (39+) rest posts
       })
       .addCase(deletePost.fulfilled, (state, action) => {
         if (!action.payload?.id) {

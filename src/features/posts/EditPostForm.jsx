@@ -13,7 +13,6 @@ const EditPostForm = () => {
   const currentPost = useSelector((state) => selectPostById(state, postId)); // have to have callback to post both state, and postId
 
   const currentUser = users.find((el) => el.id === currentPost?.userId);
-  const userId = currentUser?.id; //currentUser is too slow, thats why chaining operator
 
   if (!currentPost || !currentUser) {
     return (
@@ -25,12 +24,13 @@ const EditPostForm = () => {
 
   const dispatch = useDispatch();
 
-  const [user, setUser] = useState(currentUser?.name);
+  const [newUserId, setNewUserId] = useState(currentUser?.id);
   const [title, setTitle] = useState(currentPost?.title); //?. chaining operator returns always undefined if something goes wrong
   const [body, setBody] = useState(currentPost?.body);
   const [addRequestStatus, setAddRequestStatus] = useState("idle");
 
-  const canSave = [title, title, user].every(Boolean) && addRequestStatus === "idle";
+
+  const canSave = [title, body, newUserId].every(Boolean) && addRequestStatus === "idle";
 
   const onClickUpdate = () => {
     if (canSave) {
@@ -41,13 +41,13 @@ const EditPostForm = () => {
             id: postId,
             title,
             body,
-            userId,
+            userId: newUserId,
             reaction: currentPost.reaction,
           })
         ).unwrap(); //unwrap to allow try & catch block
-        setUser("");
         setTitle("");
         setBody("");
+        setNewUserId("");
         navigate(`/post/${postId}`);
       } catch (err) {
         console.error("Failed to save the post", err);
@@ -67,9 +67,6 @@ const EditPostForm = () => {
             id: postId,
           })
         ).unwrap(); //unwrap to allow try & catch block
-        setUser("");
-        setTitle("");
-        setBody("");
         navigate(`/`);
       } catch (err) {
         console.error("Failed to delete the post", err);
@@ -100,11 +97,10 @@ const EditPostForm = () => {
           <label htmlFor="user">Author</label>
           <select
             onChange={(e) => {
-              setUser(e.target.value);
+              setNewUserId(users.find((el) => el.name === e.target.value).id)
             }}
-            defaultValue={user} //last author
+            defaultValue={currentUser?.name} //last author
           >
-            <option value=""></option>
             <PostUser />
           </select>
         </div>
