@@ -12,7 +12,7 @@ const container = document.getElementById("root");
 const root = ReactDOM.createRoot(container);
 
 store.dispatch(fetchPosts());
-store.dispatch(fetchUsers()); 
+store.dispatch(fetchUsers());
 root.render(
   <React.StrictMode>
     <Provider store={store}>
@@ -22,5 +22,12 @@ root.render(
         </Routes>
       </Router>
     </Provider>
+    <a
+      id="badge"
+      target="_blank"
+      href="https://github.com/Keristrasz/Bulletin-Board---React-RTK-CRUD"
+    >
+      <div>Code on GitHub</div>
+    </a>
   </React.StrictMode>
 );
